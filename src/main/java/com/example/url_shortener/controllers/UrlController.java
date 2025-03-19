@@ -1,6 +1,8 @@
 package com.example.url_shortener.controllers;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,10 @@ public class UrlController {
     @GetMapping("/{shortCode}")
     public ResponseEntity<Void> redirect(@PathVariable String shortCode, HttpServletResponse response) throws IOException {
         String originalUrl = urlService.getOriginalUrl(shortCode);
-        response.sendRedirect(originalUrl);
+
+         // Decode the URL before redirecting
+        String decodedUrl = URLDecoder.decode(originalUrl, StandardCharsets.UTF_8);
+        response.sendRedirect(decodedUrl);
         return ResponseEntity.status(HttpStatus.FOUND).build();
     }
 }
